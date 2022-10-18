@@ -7,6 +7,10 @@ How to use this repository:
 
 The paper associated with this repository can be found at https://link.springer.com/article/10.1007/s11548-021-02343-y.
 
+To install dependencies, please run
+
+<code>pip install sklearn opency opencv-python tqdm pandas xgboost umap seaborn multipledispatch barbar</code>
+
 The citation details are as follows.
 
 @article{wu2021cross,
