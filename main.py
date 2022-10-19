@@ -13,7 +13,7 @@ def main() -> None:
     # Training arguments
     parser.add_argument('--lr', metavar='--lr', type=str)
     parser.add_argument('--num_epochs', metavar='--num_epochs', type=str)
-    parser.add_argument('--blobs_folder_path', metavar='--blobs_folder_path', type=list, nargs='+')
+    parser.add_argument('--blobs_folder_path', metavar='--blobs_folder_path', type=str)
     parser.add_argument('--weights_save_path', metavar='--weights_save_path', type=str)
 
     # Preprocess arguments
@@ -48,7 +48,7 @@ def main() -> None:
         except:
             num_epochs = 1000
         try:
-            blobs_folder_path = args.blobs_folder_path[0]
+            blobs_folder_path = args.blobs_folder_path
             if 'knot' or 'tying' in blobs_folder_path.lower():
                 dataset_name = 'Knot_Tying'
             elif 'needle' or 'passing' in blobs_folder_path.lower():
@@ -63,6 +63,7 @@ def main() -> None:
             weights_save_path = args.weights_save_path
         except Exception as e:
             print(e)
+
         train_encoder_decoder_embeddings(lr = lr, num_epochs = num_epochs, blobs_folder_path = blobs_folder_path, weights_save_path = weights_save_path, weight_decay = weight_decay, dataset_name = dataset_name)
     
     elif args.mode == 'multidata_train':
@@ -138,7 +139,6 @@ def main() -> None:
             spacing = int(args.spacing)
         except:
             spacing = 2
-
         create_data_blobs(optical_flow_folder_path = optical_flow_folder_path, transcriptions_folder_path = transcriptions_folder_path, kinematics_folder_path = kinematics_folder_path, num_frames_per_blob = num_frames_per_blob, blobs_save_folder_path = blobs_save_folder_path, spacing = spacing)
     
     elif args.mode == 'eval':
@@ -161,7 +161,8 @@ def main() -> None:
         model.load_state_dict(torch.load(weights_save_path))
         evaluate_model(blobs_folder_path = blobs_folder_path, model = model, num_clusters = 10, save_embeddings = False)
 
-    
+    else:
+        print('Mode is not recognized. Options are optical_flow, data_blobs, train, multidata_train, or eval')
 
 
 if __name__ == '__main__':

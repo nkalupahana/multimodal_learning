@@ -64,7 +64,6 @@ class gestureBlobDataset:
         curr_file_path = self.blobs_folder[idx]
         curr_file_path = os.path.join(self.blobs_folder_path, curr_file_path)
         curr_tensor_tuple = pickle.load(open(curr_file_path, 'rb'))
-        # print(curr_tensor_tuple[0].size())
         if curr_tensor_tuple[0].size()[0] == 50:
             return(curr_tensor_tuple)
         else:
