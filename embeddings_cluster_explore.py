@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from sklearn.cluster import KMeans
 from torch.utils.data import DataLoader
-from dataloader import gestureBlobDataset, surgeonStudyDataset, size_collate_fn
+from dataloader import gestureBlobDataset, size_collate_fn
 from neural_networks import encoderDecoder
 import os
 import pickle

@@ -32,7 +32,6 @@ class computeOpticalFlow:
             
             prvs = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             m, n = prvs.shape
-            # prvs = cv2.resize(prvs, (int(n), int(m)))
             prvs = cv2.resize(prvs, self.resize_dim)
             temp_optical_flow_frames = []
 
@@ -75,7 +74,7 @@ class computeOpticalFlow:
             while success:
                 success, image = vidcap.read()
                 try:
-                    resized_image = cv2.resize(image, resize_dim)
+                    resized_image = cv2.resize(image, self.resize_dim)
                     out.write(resized_image)
                     count += 1
                 except:

@@ -10,13 +10,13 @@ Even if you use a remote machine for the training and evaluation, it is recommen
 
 ### To install dependencies, please run
 
-<code>pip install sklearn opency opencv-python tqdm pandas xgboost umap seaborn multipledispatch barbar</code>
+<code>pip install sklearn opencv-python tqdm pandas xgboost umap seaborn multipledispatch barbar</code>
 
 ### To generate the optical flow, run the following command. You may need to adjust the path for where you downloaded your JIGSAWS directory
 
 <code>python3 main.py --mode 'optical_flow' --source_directory ../JIGSAWS/Suturing/video/ --resized_video_directory ../JIGSAWS/Suturing/resized_video --destination_directory ../JIGSAWS/Suturing/optical_flow  </code> 
 
-Go get some coffee, take a nap. The "generating optical flow" step can take a while. In the mean time, you can check that you have the same number of videos in the resized_video folder as the original video directory and you can play the videos (they should be smaller than the original though).
+Make sure the code started running OK (it should say 'Rescaling videos; Processing video Suturing_B001_capture1.avi; 100; 200;...') then go get some coffee, take a nap. The "generating optical flow" step can take a while. In the mean time, you can check that you have the same number of videos in the resized_video folder as the original video directory and you can play the videos (they should be smaller than the original though). For reference (I started at 9:05 am)
 
 ### To generate prepare the data for training, you need to generate 'data_blobs'. Run the following code:  
 

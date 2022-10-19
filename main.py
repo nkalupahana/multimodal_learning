@@ -2,7 +2,7 @@ import argparse
 from ast import parse
 from training import train_encoder_decoder_embeddings, train_encoder_decoder_multidata_embeddings
 from video_preprocessing import computeOpticalFlow, create_data_blobs
-from embeddings_cluster_explore import evaluate_model, evaluate_model_multidata, plot_umap_clusters, plot_umap_clusters_multidata, label_surgical_study_video, 
+from embeddings_cluster_explore import evaluate_model, evaluate_model_multidata, plot_umap_clusters, plot_umap_clusters_multidata
 from neural_networks import encoderDecoder
 import torch
 
