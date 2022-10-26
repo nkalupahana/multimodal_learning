@@ -25,37 +25,40 @@ class computeOpticalFlow:
         self.resized_listdir = None
 
     def get_optical_frame(self):
-        for video in self.resized_listdir:
-            print('Processing video {}'.format(video))
-            curr_video_path = os.path.join(self.resized_video_directory, video)
-            vidcap = cv2.VideoCapture(curr_video_path)
+        with mp.Pool(processes=24) as p:
+            p.map(self._get_optical_frame, self.resized_listdir)
 
+    def _get_optical_frame(self, video):
+        print('Processing video {}'.format(video))
+        curr_video_path = os.path.join(self.resized_video_directory, video)
+        vidcap = cv2.VideoCapture(curr_video_path)
+
+        success, image = vidcap.read()
+        
+        prvs = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        m, n = prvs.shape
+        prvs = cv2.resize(prvs, self.resize_dim)
+        temp_optical_flow_frames = []
+
+        count = 1
+
+        while success:
             success, image = vidcap.read()
-            
-            prvs = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            m, n = prvs.shape
-            prvs = cv2.resize(prvs, self.resize_dim)
-            temp_optical_flow_frames = []
+            try:
+                _next = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                _next = cv2.resize(_next, self.resize_dim)
+                flow = cv2.calcOpticalFlowFarneback(prvs, _next, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+                temp_optical_flow_frames.append(flow)
+                prvs = _next
+                count += 1
+            except:
+                pass
+            if count % 100 == 0:
+                print(count)
 
-            count = 1
-
-            while success:
-                success, image = vidcap.read()
-                try:
-                    _next = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                    _next = cv2.resize(_next, self.resize_dim)
-                    flow = cv2.calcOpticalFlowFarneback(prvs, _next, None, 0.5, 3, 15, 3, 5, 1.2, 0)
-                    temp_optical_flow_frames.append(flow)
-                    prvs = _next
-                    count += 1
-                except:
-                    pass
-                if count % 100 == 0:
-                    print(count)
-
-            print('Saving file')
-            save_path = os.path.join(self.destination_directory, video.split('.')[0] + '.p')
-            pickle.dump(temp_optical_flow_frames, open(save_path, 'wb'))
+        print('Saving file')
+        save_path = os.path.join(self.destination_directory, video.split('.')[0] + '.p')
+        pickle.dump(temp_optical_flow_frames, open(save_path, 'wb'))
 
     def rescale_video(self) -> None:
         if not os.path.exists(self.resized_video_directory):
