@@ -6,6 +6,7 @@ import pickle
 import sys
 from tqdm import tqdm
 from typing import Tuple
+import multiprocessing as mp
 
 class computeOpticalFlow:
     def __init__(self, source_directory: str, resized_video_directory: str = 'None', destination_directory: str = './optical_flows', resize_dim: Tuple[int, int] = (320, 240)) -> None:
@@ -60,7 +61,7 @@ class computeOpticalFlow:
         if not os.path.exists(self.resized_video_directory):
             os.makedirs(self.resized_video_directory)
         
-        for video in self.source_listdir:
+        for video in tqdm(self.source_listdir):
             print('Processing video {}'.format(video))
             curr_video_path = os.path.join(self.source_directory, video)
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
