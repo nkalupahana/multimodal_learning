@@ -25,6 +25,7 @@ class computeOpticalFlow:
         self.resized_listdir = None
 
     def get_optical_frame(self):
+        print(self.resized_listdir)
         with mp.Pool(processes=24) as p:
             p.map(self._get_optical_frame, self.resized_listdir)
 
@@ -61,6 +62,7 @@ class computeOpticalFlow:
         vidcap.release()
         with open(save_path, 'wb') as f:
             pickle.dump(temp_optical_flow_frames, f)
+        print('Done with {}'.format(video))
 
     def rescale_video(self) -> None:
         if not os.path.exists(self.resized_video_directory):
