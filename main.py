@@ -139,6 +139,7 @@ def main() -> None:
             spacing = int(args.spacing)
         except:
             spacing = 2
+
         create_data_blobs(optical_flow_folder_path = optical_flow_folder_path, transcriptions_folder_path = transcriptions_folder_path, kinematics_folder_path = kinematics_folder_path, num_frames_per_blob = num_frames_per_blob, blobs_save_folder_path = blobs_save_folder_path, spacing = spacing)
     
     elif args.mode == 'eval':

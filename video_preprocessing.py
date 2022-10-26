@@ -58,7 +58,9 @@ class computeOpticalFlow:
 
         print('Saving file')
         save_path = os.path.join(self.destination_directory, video.split('.')[0] + '.p')
-        pickle.dump(temp_optical_flow_frames, open(save_path, 'wb'))
+        vidcap.release()
+        with open(save_path, 'wb') as f:
+            pickle.dump(temp_optical_flow_frames, f)
 
     def rescale_video(self) -> None:
         if not os.path.exists(self.resized_video_directory):
@@ -105,6 +107,7 @@ class computeOpticalFlow:
             self.resized_listdir.sort()
             print('Generating optical flow.')
             self.get_optical_frame()
+
 
 def create_data_blobs(optical_flow_folder_path: str, transcriptions_folder_path: str, kinematics_folder_path: str, num_frames_per_blob: int, blobs_save_folder_path: str, spacing: int) -> None:
     if not os.path.exists(blobs_save_folder_path):
