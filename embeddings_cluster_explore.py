@@ -62,7 +62,8 @@ def store_embeddings_in_dict(blobs_folder_path: str, model: encoderDecoder) -> d
 def cluster_statistics(blobs_folder_path: str, model: encoderDecoder, num_clusters: int) -> pd.DataFrame:
     results_dict = store_embeddings_in_dict(blobs_folder_path = blobs_folder_path, model = model)
     k_means = KMeans(n_clusters = num_clusters)
-    cluster_indices = k_means.fit_predict(np.array(results_dict['embeddings']).reshape(-1, 2048))
+    print(np.array(results_dict['embeddings']).shape)
+    cluster_indices = k_means.fit_predict(np.squeeze(np.array(results_dict['embeddings'])))
     results_dict['cluster_indices'] = cluster_indices
     df = pd.DataFrame(results_dict)
     return(df)
@@ -82,15 +83,19 @@ def cluster_statistics_multidata(blobs_folder_paths_list: List[str], model: enco
     return(df)
 
 def evaluate_model(blobs_folder_path: str, model: encoderDecoder, num_clusters: int, save_embeddings: bool) -> None:
-    df = cluster_statistics(blobs_folder_path = blobs_folder_path, model = model, num_clusters = num_clusters)
+    df_train = cluster_statistics(blobs_folder_path = blobs_folder_path, model = model, num_clusters = num_clusters)
+    df_test = cluster_statistics(blobs_folder_path = blobs_folder_path + "_out", model = model, num_clusters = num_clusters)
     if save_embeddings:
         print('Saving dataframe.')
         df.to_pickle('./df.p')
-    y = df['gesture'].values.ravel()
-    X = [np.array(v) for v in df['embeddings']]
-    X = np.array(X).reshape(-1, 2048)
+    y_train = df_train['gesture'].values.ravel()
+    y_test = df_test['gesture'].values.ravel()
+    X_train = [np.array(v) for v in df_train['embeddings']]
+    X_test = [np.array(v) for v in df_test['embeddings']]
+    X_train = np.array(X_train).reshape(-1, 512)
+    X_test = np.array(X_test).reshape(-1, 512)
     classifier = XGBClassifier(n_estimators = 1000)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 8765)
+    #X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 8765)
     
     classifier.fit(X_train, y_train)
     y_hat = classifier.predict(X_train)
