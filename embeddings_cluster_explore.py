@@ -83,6 +83,8 @@ def cluster_statistics_multidata(blobs_folder_paths_list: List[str], model: enco
     return(df)
 
 def evaluate_model(blobs_folder_path: str, model: encoderDecoder, num_clusters: int, save_embeddings: bool) -> None:
+    # This leave-one-out split is done manually, by moving one user to the _out folder
+    # (not ideal, but easy to do)
     df_train = cluster_statistics(blobs_folder_path = blobs_folder_path, model = model, num_clusters = num_clusters)
     df_test = cluster_statistics(blobs_folder_path = blobs_folder_path + "_out", model = model, num_clusters = num_clusters)
     if save_embeddings:
@@ -95,7 +97,6 @@ def evaluate_model(blobs_folder_path: str, model: encoderDecoder, num_clusters: 
     X_train = np.array(X_train).reshape(-1, 512)
     X_test = np.array(X_test).reshape(-1, 512)
     classifier = XGBClassifier(n_estimators = 1000)
-    #X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 8765)
     
     classifier.fit(X_train, y_train)
     y_hat = classifier.predict(X_train)
