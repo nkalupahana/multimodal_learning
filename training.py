@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from sklearn.metrics import classification_report
 import os
 from datetime import datetime
+from tqdm import tqdm
 from typing import Tuple, List
 
 # Use subset sampler for train test split
@@ -112,8 +113,8 @@ def train_encoder_decoder_embeddings(lr: float, num_epochs: int, blobs_folder_pa
     for epoch in range(num_epochs):
         running_loss = 0
         count = 0
-        print('Epoch {}'.format(epoch + 1))
-        for data in dataloader:
+        print('Epoch {}/{}'.format(epoch + 1,num_epochs))
+        for data in tqdm(dataloader):
             curr_opt, curr_kin = data
             if torch.cuda.is_available():
                 curr_opt = curr_opt.cuda()
@@ -127,7 +128,9 @@ def train_encoder_decoder_embeddings(lr: float, num_epochs: int, blobs_folder_pa
             running_loss += loss.item()
             count += 1
         print('\n Epoch: {}, Loss: {}'.format(epoch + 1, running_loss/count))
-
+        if epoch % 100 == 0:
+            print("saving")
+            torch.save(net.state_dict(), "multimodal_epoch_" + str(epoch) + ".pth")
     print('Finished training.')
     print('Saving state dict.')
 
